@@ -1,0 +1,24 @@
+{
+  "headings": [
+    "## 29. Enfoque De IA Y Ciencia De Datos",
+    "### 29.1 Contexto Y Problema",
+    "### 29.2 Clasificación Del Problema Y Alternativa Sin IA",
+    "### 29.3 Formulación",
+    "### 29.4 Datos Y Features",
+    "### 29.5 Enfoque De Modelado O Diseño GenAI",
+    "### 29.6 Opciones Comparadas",
+    "### 29.7 Evaluación",
+    "### 29.8 Fases Y Criterios Go/No-Go",
+    "### 29.9 MLOps / LLMOps",
+    "### 29.10 IA Responsable Y Cumplimiento",
+    "### 29.11 Coste, Latencia Y Escalado",
+    "### 29.12 Dependencias Y Riesgos De IA"
+  ],
+  "patterns": [
+    {
+      "regex": "\\bPoC\\b",
+      "min": 1,
+      "message": "Faltan las fases con criterio go/no-go"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "nombre": "arquitectura-objetivo",
+  "titulo": "Planificación de visitas · arquitectura objetivo",
+  "zonas": [
+    {"id": "cliente", "titulo": "Usuarios", "columna": 0, "fila": 0, "color": "naranja"},
+    {"id": "app", "titulo": "Experiencia y API", "columna": 1, "fila": 0, "color": "azul"},
+    {"id": "servicios", "titulo": "Servicios Azure compartidos", "columna": 2, "fila": 0, "ancho": 2, "color": "morado"},
+    {"id": "red", "titulo": "Red y conectividad privada", "columna": 1, "fila": 1, "ancho": 2, "color": "amarillo"},
+    {"id": "obs", "titulo": "Observabilidad", "columna": 3, "fila": 1, "color": "gris"}
+  ],
+  "nodos": [
+    {"id": "gestor", "etiqueta": "Gestores comerciales", "zona": "cliente"},
+    {"id": "web", "etiqueta": "Frontend\nApp Service", "icono": "app_service", "zona": "app"},
+    {"id": "api", "etiqueta": "API de propuestas\nFunction App", "icono": "function_app", "zona": "app"},
+    {"id": "sql", "etiqueta": "Base de datos\nAzure SQL", "icono": "sql_database", "zona": "servicios"},
+    {"id": "aoai", "etiqueta": "Azure OpenAI", "icono": "openai", "zona": "servicios"},
+    {"id": "kv", "etiqueta": "Key Vault", "icono": "key_vault", "zona": "servicios"},
+    {"id": "vnet", "etiqueta": "VNet", "icono": "virtual_network", "zona": "red"},
+    {"id": "pe", "etiqueta": "Private Endpoints", "icono": "private_endpoint", "zona": "red"},
+    {"id": "ai", "etiqueta": "Application Insights", "icono": "app_insights", "zona": "obs"}
+  ],
+  "flujos": [
+    {"id": "propuesta", "etiqueta": "Propuesta semanal"},
+    {"id": "descarte", "etiqueta": "Descarte con motivo"}
+  ],
+  "conexiones": [
+    {"de": "gestor", "a": "web", "etiqueta": "navegador"},
+    {"de": "web", "a": "api", "flujo": "propuesta", "etiqueta": "HTTPS"},
+    {"de": "api", "a": "sql", "flujo": "propuesta"},
+    {"de": "api", "a": "aoai", "flujo": "propuesta", "etiqueta": "explicación"},
+    {"de": "web", "a": "api", "flujo": "descarte"},
+    {"de": "api", "a": "kv"},
+    {"de": "vnet", "a": "pe"},
+    {"de": "pe", "a": "sql"},
+    {"de": "api", "a": "ai"}
+  ]
+}

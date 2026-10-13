@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "userStories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "phase": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "enum": [
+                    "Arquitectura",
+                    "Backend",
+                    "Frontend",
+                    "Ciencia de datos",
+                    "Diseño de despliegue",
+                    "Implementación de pipelines y despliegue",
+                    "QA",
+                    "DevOps",
+                    "Documentación",
+                    "Reuniones"
+                  ]
+                },
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "activityType": {
+                        "type": "string",
+                        "enum": [
+                          "Architecture",
+                          "backend",
+                          "Backend",
+                          "Frontend",
+                          "Testing",
+                          "Deploy",
+                          "Documents",
+                          "Data Gen",
+                          "Meeting",
+                          "Labeling",
+                          "Training",
+                          "UX Design",
+                          "PowerBI",
+                          "Hardware",
+                          "Management"
+                        ]
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "DS",
+                          "DEV",
+                          "DEVOPS",
+                          "PM",
+                          "ARCHITECT",
+                          "QA",
+                          "DATA",
+                          "UX",
+                          "CONSULTANT"
+                        ]
+                      },
+                      "level": {
+                        "type": "string",
+                        "enum": [
+                          "N1",
+                          "N2",
+                          "N3",
+                          "N4"
+                        ]
+                      },
+                      "hours": {
+                        "type": "number"
+                      },
+                      "risk": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "activityType",
+                      "role",
+                      "level",
+                      "hours",
+                      "risk"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "activities"
+              ]
+            }
+          }
+        },
+        "required": [
+          "phase",
+          "title",
+          "blocks"
+        ]
+      }
+    }
+  },
+  "required": [
+    "userStories"
+  ]
+}

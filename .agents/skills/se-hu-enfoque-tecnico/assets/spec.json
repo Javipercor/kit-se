@@ -1,0 +1,62 @@
+{
+  "title_regex": "^HU-Enfoque-T[eé]cnico-&-Arquitectura\\. .+|^# HU-Enfoque-T[eé]cnico-&-Arquitectura\\. .+",
+  "require_control_block": true,
+  "headings": [
+    "## 1. Contexto",
+    "## 2. Objetivo Tecnico",
+    "## 3. Resumen tecnico",
+    "## 4. Arquitectura objetivo basada en la evidencia",
+    "## 5. Flujo tecnico de referencia",
+    "## 6. Componentes y estado de madurez",
+    "## 7. Alcance tecnico",
+    "## 8. Dominios de datos identificados",
+    "## 9. Contratos pendientes / decisiones a confirmar",
+    "## 10. No funcionales",
+    "## 11. Opciones tecnicas comparadas",
+    "## 12. Diagrama de arquitectura objetivo preferida",
+    "## 13. Principios De Arquitectura",
+    "## 14. Componentes",
+    "## 15. Arquitectura Objetivo",
+    "## 16. Flujos Tecnicos Detallados",
+    "## 17. Trazabilidad Funcional A Flujos Tecnicos",
+    "## 18. Integraciones",
+    "## 19. Seguridad E Identidad",
+    "## 20. Infraestructura, Red Y Conectividad",
+    "## 21. Recursos Minimos Por Entorno",
+    "### 21.1 Perfil De Entornos",
+    "### 21.2 Recursos Base",
+    "## 22. Datos Y Contratos",
+    "### 22.3 Errores Funcionales Normalizados",
+    "### 22.4 Matriz Tecnica De Fuentes Y Disponibilidad",
+    "### 22.5 Persistencia De Datos",
+    "## 23. Modelo De Desarrollo, Interfaces Y Evaluacion",
+    "### 23.1 Modalidad De Implementacion",
+    "### 23.2 Interfaces De Agente",
+    "### 23.3 Arquetipo De Repositorios Y Artefactos",
+    "### 23.4 Prompting, Evaluacion Y Calidad",
+    "## 24. Observabilidad Y Operacion",
+    "## 25. DevOps Y Gobierno",
+    "## 26. Criterios De Aceptacion Tecnicos",
+    "## 27. Dependencias Tecnicas",
+    "## 28. Riesgos Tecnicos",
+    "## 29. Enfoque De IA Y Ciencia De Datos"
+  ],
+  "min_mermaid": 3,
+  "patterns": [
+    {
+      "regex": "CAT-\\d{2}",
+      "min": 5,
+      "message": "Se esperan al menos 5 criterios técnicos CAT-NN"
+    },
+    {
+      "regex": "\\|\\s*Paso\\s*\\|\\s*Componente\\s*\\|",
+      "min": 2,
+      "message": "Faltan tablas de pasos en flujos detallados"
+    },
+    {
+      "regex": "^### 11\\.\\d+ ",
+      "min": 1,
+      "message": "§11 necesita al menos una opción técnica comparada (11.1…)"
+    }
+  ]
+}

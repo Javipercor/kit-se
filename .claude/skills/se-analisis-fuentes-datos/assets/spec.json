@@ -1,0 +1,15 @@
+{
+  "title_regex": "^# DATA-Analisis-Fuentes\\. .+",
+  "require_control_block": true,
+  "headings": [
+    "## 1. Contexto Y Alcance Del Análisis", "## 2. Inventario De Fuentes", "## 3. Dominios De Datos Y Entidades",
+    "## 4. Perfilado De Muestras", "## 5. Calidad De Datos", "## 6. Datos Personales Y Clasificación",
+    "## 7. Modelo Conceptual", "## 8. Linaje Y Flujos De Datos", "## 9. Contratos De Datos",
+    "## 10. Estrategia De Integración", "## 11. Arquitectura De Datos Propuesta",
+    "## 12. Idoneidad Para Analítica E IA", "## 13. Gaps, Dependencias Y Preguntas",
+    "## 14. Riesgos De Datos", "## 15. Referencias"
+  ],
+  "patterns": [
+    {"regex": "SRC-\\d{2}", "min": 1, "message": "No hay fuentes SRC-NN en el inventario"}
+  ]
+}

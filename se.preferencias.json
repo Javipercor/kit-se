@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "descripcion": "Preferencias tecnológicas y de arquitectura del kit SE. Niveles: obligatoria (se usa salvo excepción aceptada por una persona), preferente (opción por defecto; desviarse exige motivo y alternativas), evitar (solo con motivo), prohibida (solo con excepción aceptada por una persona). Edita con preferencias.py o a mano.",
+  "preferencias": []
+}

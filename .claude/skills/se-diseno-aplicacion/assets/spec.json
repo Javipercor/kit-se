@@ -1,0 +1,14 @@
+{
+  "title_regex": "^# APP-Diseno\\. .+",
+  "require_control_block": true,
+  "headings": [
+    "## 1. Contexto Y Alcance", "## 2. Decisiones De Stack (ADR)", "## 3. Descomposición En Módulos",
+    "## 4. Contratos API", "## 5. Persistencia Y Modelo De Datos De Aplicación", "## 6. Frontend Y Canal",
+    "## 7. Aspectos Transversales", "## 8. Componentes De IA Y Datos En La Aplicación", "## 9. Estrategia De Pruebas",
+    "## 10. Arquetipo De Repositorios Y Pipeline", "## 11. Trazabilidad HU → Módulo → Operación",
+    "## 12. Dependencias, Riesgos Y Preguntas", "## 13. Referencias"
+  ],
+  "patterns": [
+    {"regex": "ADR-\\d{2}", "min": 1, "message": "Falta al menos un ADR-NN"}
+  ]
+}

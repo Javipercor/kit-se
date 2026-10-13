@@ -1,0 +1,302 @@
+{
+  "language": "es",
+  "workspace": {
+    "sources_dir": "RFP",
+    "samples_dir": "data-samples",
+    "templates_dir": "templates",
+    "output_dir": "proposal"
+  },
+  "evidence_states": [
+    "Evidenciado",
+    "Inferido",
+    "Propuesto",
+    "Preferente",
+    "Alternativa condicionada",
+    "Dependencia crítica",
+    "Nueva capacidad requerida",
+    "Gobernado por plataforma",
+    "A confirmar",
+    "Ejemplo orientativo",
+    "No aplica"
+  ],
+  "backlog": {
+    "roles": [
+      "Architect",
+      "Backend",
+      "Frontend",
+      "DS",
+      "DataEng",
+      "DevOps",
+      "UI/UX",
+      "QA"
+    ],
+    "devops_only_roles": [
+      "DevOps"
+    ],
+    "forbidden_story_roles": [
+      "arquitecto",
+      "architect",
+      "backend",
+      "frontend",
+      "data scientist",
+      "cientifico de datos",
+      "ingeniero de datos",
+      "data engineer",
+      "devops",
+      "qa",
+      "tester",
+      "pm",
+      "project manager",
+      "jefe de proyecto",
+      "desarrollador",
+      "developer",
+      "programador",
+      "equipo tecnico",
+      "sistema"
+    ],
+    "min_criteria": 3,
+    "max_criteria": 7,
+    "min_hours": 1,
+    "max_hours": 16,
+    "levels": {
+      "N1": "Tarea conocida, sin incertidumbre, patrón repetible",
+      "N2": "Complejidad moderada, dependencias conocidas",
+      "N3": "Complejidad alta o integración con terceros con contrato parcial",
+      "N4": "Alta incertidumbre: datos, contrato o tecnología sin validar"
+    },
+    "fixed_epics": {
+      "first": "Arquitectura",
+      "penultimate": "DevOps",
+      "last": "Documentacion y Entregables"
+    },
+    "default_phase": "Fase única - Implementación del caso de uso"
+  },
+  "agents": {
+    "se-lider-proyecto": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash, Task",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-analista-corpus": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-analista-funcional": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-analista-datos": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-arquitecto-ia-datos": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-arquitecto-solucion": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-disenador-aplicacion": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-redactor-specs": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-planificador-backlog": {
+      "claude_tools": "Read, Grep, Glob, Write, Edit, Bash",
+      "codex_sandbox": "workspace-write"
+    },
+    "se-revisor-coherencia": {
+      "claude_tools": "Read, Grep, Glob, Write, Bash",
+      "codex_sandbox": "workspace-write"
+    }
+  },
+  "requirements": {
+    "id_pattern": "^RQ-\\d{3}$",
+    "inline_id_regex": "\\b(?:RQ-HU-\\d{3}|RQ-\\d{3})\\b",
+    "types": {
+      "funcional": [
+        "Funcional"
+      ],
+      "tecnico": [
+        "No funcional",
+        "Datos",
+        "IA/Analítica",
+        "Integración",
+        "Seguridad",
+        "Privacidad",
+        "Infraestructura",
+        "Operación",
+        "Calidad/Testing",
+        "Restricción tecnológica"
+      ],
+      "otros": [
+        "Contractual/Entregable",
+        "Gestión"
+      ]
+    },
+    "coverage_required": [
+      "funcional",
+      "tecnico"
+    ],
+    "states": [
+      "Evidenciado",
+      "Inferido",
+      "A confirmar",
+      "Fuera de alcance"
+    ],
+    "priorities": [
+      "Obligatorio",
+      "Deseable",
+      "Opcional",
+      "A confirmar"
+    ],
+    "chunk_lines": 80,
+    "dedupe": {
+      "backend": "lexico",
+      "lexico": {
+        "alta": 0.8,
+        "revisar": 0.5
+      },
+      "azure": {
+        "endpoint_env": "AZURE_OPENAI_ENDPOINT",
+        "api_key_env": "AZURE_OPENAI_API_KEY",
+        "api_version": "2024-10-21",
+        "deployment": "text-embedding-3-small",
+        "batch": 256,
+        "alta": 0.85,
+        "revisar": 0.72
+      },
+      "max_rq_por_capacidad": 8,
+      "max_capacidades_por_hu": 2
+    }
+  },
+  "python": {
+    "runner": "uv run --group se",
+    "group": "se",
+    "deps": [
+      "drawpyo",
+      "openpyxl",
+      "pandas",
+      "pdfplumber",
+      "pyarrow",
+      "pypdf",
+      "python-docx",
+      "python-pptx"
+    ],
+    "embeddings_deps": [
+      "openai",
+      "azure-identity"
+    ]
+  },
+  "decisiones": {
+    "areas": [
+      "alcance",
+      "requisitos",
+      "funcional",
+      "datos",
+      "ia",
+      "arquitectura",
+      "tecnologia",
+      "integracion",
+      "seguridad",
+      "despliegue",
+      "estimacion",
+      "proceso"
+    ],
+    "areas_impacto_alto": [
+      "alcance",
+      "arquitectura",
+      "tecnologia",
+      "seguridad",
+      "estimacion"
+    ],
+    "ambitos_tecnologicos": [
+      "cloud",
+      "lenguaje-backend",
+      "framework-backend",
+      "frontend",
+      "canal",
+      "bbdd-relacional",
+      "bbdd-documental",
+      "bbdd-vectorial",
+      "almacenamiento",
+      "mensajeria",
+      "integracion",
+      "orquestacion-datos",
+      "plataforma-datos",
+      "llm",
+      "embeddings",
+      "orquestacion-agentes",
+      "ml",
+      "mlops",
+      "identidad",
+      "observabilidad",
+      "ci-cd",
+      "iac",
+      "contenedores",
+      "patron-arquitectura"
+    ],
+    "niveles_preferencia": [
+      "obligatoria",
+      "preferente",
+      "evitar",
+      "prohibida"
+    ]
+  },
+  "exportacion": {
+    "salida": "proposal/exports",
+    "ado_perfil_por_rol": {
+      "Architect": "General",
+      "Backend": "Backend",
+      "Frontend": "Frontend",
+      "DS": "General",
+      "DataEng": "Backend",
+      "DevOps": "DevOps",
+      "UI/UX": "Design",
+      "QA": "QA"
+    },
+    "xlsx_bloque_por_rol": {
+      "Architect": "Arquitectura",
+      "Backend": "Backend",
+      "Frontend": "Frontend",
+      "DS": "Ciencia de datos",
+      "DataEng": "Ciencia de datos",
+      "DevOps": "DevOps",
+      "UI/UX": "Frontend",
+      "QA": "QA"
+    },
+    "xlsx_tipo_por_rol": {
+      "Architect": "Architecture",
+      "Backend": "Backend",
+      "Frontend": "Frontend",
+      "DS": "Training",
+      "DataEng": "Data Gen",
+      "DevOps": "Deploy",
+      "UI/UX": "UX Design",
+      "QA": "Testing"
+    },
+    "xlsx_rol_por_rol": {
+      "Architect": "ARCHITECT",
+      "Backend": "DEV",
+      "Frontend": "DEV",
+      "DS": "DS",
+      "DataEng": "DATA",
+      "DevOps": "DEVOPS",
+      "UI/UX": "UX",
+      "QA": "QA"
+    },
+    "xlsx_epica_documentacion": {
+      "bloque": "Documentación",
+      "tipo": "Documents"
+    },
+    "xlsx_riesgo_por_nivel": {
+      "N1": 0,
+      "N2": 1,
+      "N3": 2,
+      "N4": 3
+    }
+  }
+}

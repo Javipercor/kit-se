@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Backlog",
+  "description": "Azure DevOps backlog structure",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "user_stories": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "acceptance_criteria": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "title": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "profile": {
+                        "type": "string",
+                        "enum": [
+                          "Backend",
+                          "Frontend",
+                          "QA",
+                          "DevOps",
+                          "Design",
+                          "General"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "title",
+                      "description",
+                      "profile"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "title",
+                "description",
+                "acceptance_criteria",
+                "tasks"
+              ]
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "user_stories"
+        ]
+      }
+    }
+  },
+  "required": [
+    "features"
+  ]
+}

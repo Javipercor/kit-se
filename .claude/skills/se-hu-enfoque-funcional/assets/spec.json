@@ -1,0 +1,25 @@
+{
+  "title_regex": "^# HU-Enfoque-Funcional\\. .+",
+  "require_control_block": true,
+  "headings": [
+    "## 1. Contexto", "## 2. Historia De Usuario", "## 3. Objetivo Funcional", "## 4. Actores",
+    "## 5. Disparadores", "## 6. Alcance Funcional Incluido", "## 7. Fuera De Alcance",
+    "## 8. Flujo Funcional Principal", "## 9. Flujos Alternativos", "## 10. Reglas Funcionales",
+    "## 11. Datos Funcionales Necesarios", "## 12. Criterios De Aceptación", "## 13. Requisitos Y Trazabilidad",
+    "### 13.1 Requisitos consolidados", "### 13.2 Trazabilidad por historia de usuario",
+    "## 14. Dependencias Funcionales", "## 15. Riesgos Funcionales", "## 16. Métricas De Seguimiento",
+    "## 17. Referencias"
+  ],
+  "patterns": [
+    {"regex": "^### HU-[A-Z][A-Z0-9]{1,5}-\\d{2}\\. .+", "min": 1, "message": "Faltan historias con formato '### HU-<ACR>-NN. <Nombre>'"},
+    {"regex": "^\\*\\*Como\\*\\* .+", "min": 1, "message": "Faltan líneas '**Como** <actor>,'"},
+    {"regex": "^\\*\\*quiero\\*\\* .+", "min": 1, "message": "Faltan líneas '**quiero** <capacidad>,'"},
+    {"regex": "^\\*\\*para\\*\\* .+", "min": 1, "message": "Faltan líneas '**para** <resultado>.'"},
+    {"regex": "^\\*\\*Requisitos:\\*\\* .+", "min": 1, "message": "Cada HU debe tener una línea '**Requisitos:** RQ-...'"},
+    {"regex": "CA-[A-Z][A-Z0-9]{1,5}-\\d{2}", "min": 3, "message": "Se esperan criterios de aceptación CA-<ACR>-NN"},
+    {"regex": "RQ-(HU-)?\\d{3}", "min": 1, "message": "No hay trazas a requisitos RQ-NNN / RQ-HU-NNN"}
+  ],
+  "forbidden": [
+    {"regex": "^\\*\\*Como\\*\\* (el |la )?(arquitect|desarrollador|developer|devops|data scientist|backend|frontend|sistema)", "message": "Historia de usuario con rol técnico o 'sistema' como actor"}
+  ]
+}
