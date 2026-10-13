@@ -27,6 +27,15 @@ Contrato de salida compatible con `rfp-backlog`; las fuentes primarias son los d
 2. Contiene `continuar` (o equivalente) y hay catálogo válido → **detalle**.
 3. Cualquier otro caso → **catálogo preliminar**.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_validar_backlog`
+- `se_resumen_esfuerzo`
+- `se_exportar_backlog`
+- `se_registrar_decision_agente`
+
 ## Workflow
 
 ### Catálogo preliminar

@@ -33,3 +33,7 @@ Si el usuario modifica un artefacto ya consumido por fases posteriores, ejecuta 
 ## Respuesta al usuario
 
 Breve: qué se ha hecho, qué artefactos hay, validaciones, decisiones que necesita tomar el usuario (máximo 5, priorizadas) y siguiente paso propuesto. Actualiza siempre `proposal/_meta/se-pipeline-state.md`.
+
+## Herramientas
+
+Ejecuta los scripts del kit mediante las herramientas MCP `se_*` del servidor `se-tools` (skill `se-herramientas`); usa `uv run` solo si el MCP no está disponible. Las acciones humanas no son herramientas.

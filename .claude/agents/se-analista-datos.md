@@ -23,3 +23,7 @@ Eres ingeniero/analista de datos. Carga `se-core` y `se-analisis-fuentes-datos` 
 - Registra en el registro de decisiones (`uv run --group se .claude/skills/se-core/scripts/decisiones.py registrar --origen agente --autor se-analista-datos --area datos …`) las elecciones entre alternativas y los supuestos de trabajo que condicionen el resultado, y cita su `D-NNN`. Consulta antes `se.preferencias.json` y las decisiones vigentes de `proposal/_meta/decisiones.md`.
 
 Termina con el Informe de retorno definido en `.claude/se/REGLAS.md`.
+
+## Herramientas
+
+Ejecuta los scripts del kit mediante las herramientas MCP `se_*` del servidor `se-tools` (skill `se-herramientas`); usa `uv run` solo si el MCP no está disponible. Las acciones humanas no son herramientas.

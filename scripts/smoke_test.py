@@ -159,6 +159,44 @@ def tools_check(ws: Path) -> None:
         print("-- drawpyo no disponible: se omite el diagrama")
 
 
+def global_flow() -> None:
+    """Instalación global en una carpeta personal simulada, uso desde un repositorio y desinstalación."""
+    with tempfile.TemporaryDirectory() as tmp:
+        home, repo = Path(tmp) / "home", Path(tmp) / "repo"
+        (home / ".config/opencode").mkdir(parents=True)
+        (home / ".config/opencode/opencode.json").write_text('{"mcp": {"otro": {"type": "local", "command": ["x"]}}}')
+        (home / ".claude.json").write_text('{"numStartups": 3, "mcpServers": {"otro": {"command": "x"}}}')
+        run(str(SRC / "scripts/install.py"), "--tool", "all", "--global", "--home", str(home))
+        for rel in (".config/opencode/agents/se-lider-proyecto.md", ".config/opencode/commands/se-pipeline.md",
+                    ".agents/skills/se-herramientas/SKILL.md", ".agents/se/tools/se_mcp.py", ".agents/se/defaults/se.config.json",
+                    ".claude/skills/se-core/SKILL.md", ".claude/se/tools/se_mcp.py", ".claude/agents/se-analista-corpus.md",
+                    ".codex/agents/se-analista-corpus.toml", ".config/opencode/AGENTS.md", ".claude/CLAUDE.md", ".codex/AGENTS.md"):
+            assert (home / rel).exists(), rel
+        skill = (home / ".agents/skills/se-corpus-rfp/SKILL.md").read_text(encoding="utf-8")
+        assert f"{home}/.agents/skills/se-corpus-rfp/scripts/req_scan.py" in skill, "rutas no reescritas"
+        assert f"{home}/.agents/se/REGLAS.md" in (home / ".codex/AGENTS.md").read_text(encoding="utf-8")
+        oc = json.loads((home / ".config/opencode/opencode.json").read_text(encoding="utf-8"))["mcp"]
+        assert set(oc) == {"otro", "se-tools"} and oc["se-tools"]["command"][-1] == f"{home}/.agents/se/tools/se_mcp.py"
+        cj = json.loads((home / ".claude.json").read_text(encoding="utf-8"))
+        assert cj["numStartups"] == 3 and set(cj["mcpServers"]) == {"otro", "se-tools"}
+        assert "[mcp_servers.se-tools]" in (home / ".codex/config.toml").read_text(encoding="utf-8")
+        repo.mkdir()
+        r = subprocess.run([sys.executable, str(home / ".agents/skills/se-core/scripts/init_workspace.py"), "--no-uv"],
+                           cwd=repo, capture_output=True, text=True)
+        assert r.returncode == 0 and (repo / "se.config.json").exists(), r.stdout + r.stderr
+        msgs = [{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18"}},
+                {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "se_trazabilidad", "arguments": {}}}]
+        r = subprocess.run([sys.executable, str(home / ".claude/se/tools/se_mcp.py")], cwd=repo, capture_output=True, text=True,
+                           input="\n".join(json.dumps(m) for m in msgs) + "\n", timeout=300)
+        assert json.loads(r.stdout.splitlines()[1])["result"]["structuredContent"]["exit_code"] in (0, 1), r.stdout
+        run(str(SRC / "scripts/install.py"), "--uninstall", "--global", "--home", str(home))
+        assert not (home / ".agents/skills/se-core").exists() and not (home / ".claude/se").exists()
+        assert json.loads((home / ".config/opencode/opencode.json").read_text(encoding="utf-8")) == {"mcp": {"otro": {"type": "local", "command": ["x"]}}}
+        assert json.loads((home / ".claude.json").read_text(encoding="utf-8")) == {"numStartups": 3, "mcpServers": {"otro": {"command": "x"}}}
+        assert not (home / ".codex/config.toml").exists() and not (home / ".claude/CLAUDE.md").exists()
+    print("OK  instalación global (instalar, usar desde un repositorio, desinstalar)")
+
+
 def uv_flow() -> None:
     """/se-init con uv: pyproject, .venv y ejecución con uv run (sin dependencias, para no requerir red)."""
     import shutil
@@ -194,7 +232,9 @@ def main() -> int:
         assert set(mcp) == {"otro", "se-tools"}, mcp
         toml = (ws / ".codex/config.toml").read_text(encoding="utf-8")
         assert toml.count("[mcp_servers.se-tools]") == 1 and 'model = "otro"' in toml, toml
-        assert (ws / ".opencode/plugins/se-tools.js").exists()
+        oc = json.loads((ws / ".opencode/opencode.json").read_text(encoding="utf-8"))
+        assert oc["mcp"]["se-tools"]["command"][:3] == ["uv", "run", "--no-project"], oc
+        assert not (ws / ".opencode/plugins/se-tools.js").exists(), "el plugin solo con --opencode-plugin"
         check_coexistence(ws, installed=True)
         sk = ws / ".agents/skills"
         opp = ws
@@ -292,10 +332,12 @@ def main() -> int:
         check_coexistence(ws, installed=False)
         assert json.loads((ws / ".mcp.json").read_text(encoding="utf-8")) == {"mcpServers": {"otro": {"command": "otro-mcp"}}}
         assert "se-tools" not in (ws / ".codex/config.toml").read_text(encoding="utf-8")
+        assert not (ws / ".opencode/opencode.json").exists()
         assert not (ws / ".opencode/plugins/se-tools.js").exists()
         assert (ws / "proposal/6.0-backlog.md").exists(), "la desinstalación no debe tocar el workspace"
         print("OK  convivencia con otro kit (instalar, reinstalar, desinstalar)")
     uv_flow()
+    global_flow()
     run(str(SRC / "scripts/sync_agents.py"), "--check")
     print("Smoke test superado")
     return 0

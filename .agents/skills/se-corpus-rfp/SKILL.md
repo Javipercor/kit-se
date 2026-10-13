@@ -15,6 +15,15 @@ description: "Kit SE (Solutions Engineering). Analiza el corpus de una oportunid
 | `proposal/3-questions-for-client.md` | `assets/3-questions-for-client.md` |
 | `proposal/checklists/se-corpus-rfp.md` | Checklist de esta skill |
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_inventario_corpus`
+- `se_barrido_requisitos`
+- `se_agrupar_requisitos`
+- `se_calibrar_similitud`
+
 ## Workflow
 
 1. `uv run .agents/skills/se-core/scripts/init_workspace.py` si falta el layout.

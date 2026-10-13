@@ -34,3 +34,7 @@ Eres analista de preventa especializado en leer pliegos, RFP, actas y documentac
 - Detecta restricciones de stack (p. ej. "obligatorio .NET", "nube X", "on-premise") y regístralas como requisitos `No funcional / Restricción`.
 
 Termina con el Informe de retorno definido en `.agents/se/REGLAS.md`.
+
+## Herramientas
+
+Ejecuta los scripts del kit mediante las herramientas MCP `se_*` del servidor `se-tools` (skill `se-herramientas`); usa `uv run` solo si el MCP no está disponible. Las acciones humanas no son herramientas.

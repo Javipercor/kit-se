@@ -61,7 +61,7 @@ Detalle completo en `.agents/skills/se-core/references/politica-evidencia.md`. R
 
 ## Herramientas del kit
 
-Los scripts deterministas del kit están también disponibles como herramientas `se_*`: plugin `se-tools` en OpenCode y servidor MCP `se-tools` en Claude Code y Codex (mismo registro, `.agents/se/tools/se_tools.py`). Si las tienes, úsalas en lugar de lanzar el script con `uv run`: el resultado es el mismo y los argumentos van validados. Las acciones humanas (aprobar HUs, aceptar o rechazar decisiones, registrar decisiones humanas, fijar preferencias) no son herramientas: solo se ejecutan como script, a petición expresa de la persona.
+Los scripts deterministas del kit se ejecutan como herramientas `se_*` del servidor MCP `se-tools`, igual en OpenCode, Claude Code y Codex (registro único en `.agents/se/tools/se_tools.py`). Usa la herramienta en lugar de lanzar el script: valida los argumentos y devuelve `{ok, exit_code, output}`. La skill `se-herramientas` explica cada herramienta, sus argumentos y qué hacer si el MCP no está conectado (mismo comportamiento con `uv run --no-project .agents/se/tools/se_tools.py call <herramienta> '<json>'`). Las acciones humanas (aprobar HUs, aceptar o rechazar decisiones, registrar decisiones humanas, fijar preferencias) no son herramientas: solo se ejecutan como script, a petición expresa de la persona.
 
 | Herramienta | Script |
 | --- | --- |

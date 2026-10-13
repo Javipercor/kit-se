@@ -7,17 +7,23 @@
 #
 #   make uninstall DEST=ruta              Quita el kit SE sin tocar otros kits ni el workspace
 #
+#   make global [TOOL=all|opencode|claude|codex]      Instala el kit para todos tus repositorios (~/)
+#   make global-uninstall [TOOL=...]                  Lo quita de tu carpeta personal
+#   PLUGIN=1                              Instala además el plugin nativo de OpenCode 2 (opcional)
+#
 # Sin DEST se trabaja sobre la propia carpeta del kit. Solo se tocan elementos con prefijo se-.
 
 PYTHON ?= uv run --no-project python
 DEST   ?=
 FORCE  ?=
+TOOL   ?= all
+PLUGIN ?=
 
 INSTALL = $(PYTHON) scripts/install.py
-ARGS    = $(DEST) $(if $(FORCE),--force,)
+ARGS    = $(DEST) $(if $(FORCE),--force,) $(if $(PLUGIN),--opencode-plugin,)
 
 .DEFAULT_GOAL := help
-.PHONY: help opencode claude codex all uninstall sync check test clean
+.PHONY: help opencode claude codex all uninstall global global-uninstall mcp-test sync check test clean
 
 help: ## Muestra esta ayuda
 	@echo "Uso: make <objetivo> [DEST=ruta] [FORCE=1]   (requiere uv)"
@@ -38,6 +44,15 @@ all: ## Instala para OpenCode, Claude Code y Codex
 
 uninstall: ## Quita el kit SE de DEST (conserva se.config.json y el workspace)
 	$(PYTHON) scripts/install.py --uninstall $(DEST)
+
+global: ## Instala el kit en tu carpeta personal para todos los repositorios (TOOL=all|opencode|claude|codex)
+	$(INSTALL) --tool $(TOOL) --global $(if $(PLUGIN),--opencode-plugin,)
+
+global-uninstall: ## Quita la instalación global (TOOL=all|opencode|claude|codex)
+	$(INSTALL) --uninstall --global --tool $(TOOL)
+
+mcp-test: ## Arranca el servidor MCP y comprueba que responde (initialize + tools/list)
+	@printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"make","version":"1"}}}' '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' | uv run --no-project .agents/se/tools/se_mcp.py | python3 -c "import sys,json;r=[json.loads(l) for l in sys.stdin];print('OK se-tools', r[0]['result']['serverInfo']['version'], '·', len(r[1]['result']['tools']), 'herramientas')"
 
 sync: ## Regenera .claude/ y .codex/ desde las fuentes
 	$(PYTHON) scripts/sync_agents.py

@@ -15,6 +15,16 @@ Obligatorio `HU-Enfoque-Funcional-*.md`. Recomendado: `DATA-Analisis-Fuentes-*.m
 
 `proposal/HU-Enfoque-Tecnico-&-Arquitectura-<slug>.md` y `proposal/checklists/se-hu-enfoque-tecnico.md`.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_validar_documento`
+- `se_decisiones`
+- `se_registrar_decision_agente`
+- `se_preferencias`
+- `se_diagrama_azure`
+
 ## Workflow
 
 0. Decisiones y preferencias: lee `proposal/_meta/decisiones.md` y `uv run --group se .claude/skills/se-core/scripts/preferencias.py listar`. Las decisiones `aceptada` y las preferencias `obligatoria`/`prohibida` son restricciones de diseño; registra cada elección tecnológica o de arquitectura con `decisiones.py registrar` y cita su `D-NNN` (ver `se-core/references/decisiones.md`).

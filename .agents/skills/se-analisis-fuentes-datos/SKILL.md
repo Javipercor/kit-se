@@ -9,6 +9,15 @@ description: "Kit SE (Solutions Engineering). Analiza las fuentes de datos de un
 
 `proposal/DATA-Analisis-Fuentes-<slug>.md` (plantilla `assets/template.md`), perfiles en `proposal/_meta/data-profiles/` y `proposal/checklists/se-analisis-fuentes-datos.md`.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_perfilar_datos`
+- `se_validar_documento`
+- `se_registrar_decision_agente`
+- `se_preferencias`
+
 ## Workflow
 
 1. Inventario: extrae fuentes del corpus, matriz y documento funcional. Una fila `SRC-NN` por fuente lógica. Clasifica tipo (`transaccional`, `analítico`, `batch`, `evento`, `documental`, `SaaS`, `configuración`, `operacional`) y modo de acceso (`API`, `fichero`, `BD`, `stream`, `CDC`, `scraping` — este último solo si es legal y está evidenciado).

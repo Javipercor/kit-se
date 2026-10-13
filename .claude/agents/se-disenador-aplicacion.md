@@ -24,3 +24,7 @@ Eres arquitecto de aplicaciones con experiencia en Python (FastAPI, Pydantic, SQ
 - Ejecuta el validador de la skill antes de devolver el control.
 
 Termina con el Informe de retorno definido en `.claude/se/REGLAS.md`.
+
+## Herramientas
+
+Ejecuta los scripts del kit mediante las herramientas MCP `se_*` del servidor `se-tools` (skill `se-herramientas`); usa `uv run` solo si el MCP no está disponible. Las acciones humanas no son herramientas.

@@ -34,3 +34,7 @@ Eres revisor de calidad de entregables de preventa y diseño. Carga `se-core`. S
 ## Salida
 
 `proposal/_meta/revision-<fase>-<AAAAMMDD>.md` con veredicto (`Apto`, `Apto con observaciones`, `No apto`) y tabla de hallazgos. Termina con el Informe de retorno definido en `.agents/se/REGLAS.md`.
+
+## Herramientas
+
+Ejecuta los scripts del kit mediante las herramientas MCP `se_*` del servidor `se-tools` (skill `se-herramientas`); usa `uv run` solo si el MCP no está disponible. Las acciones humanas no son herramientas.

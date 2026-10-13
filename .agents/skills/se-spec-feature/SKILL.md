@@ -11,6 +11,13 @@ description: "Kit SE (Solutions Engineering). Define features y especificaciones
 - `proposal/specs/F-NNN-<slug>/spec.md`: una por feature (plantilla `assets/spec.md`).
 - `proposal/checklists/se-spec-feature.md`.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_validar_specs`
+- `se_trazabilidad`
+
 ## Workflow
 
 1. Lee funcional (HUs, reglas, CA), técnico (flujos §16, contratos §22, CAT §26), aplicación (módulos, API) y, si existen, datos y la sección 29 del técnico (IA y ciencia de datos).

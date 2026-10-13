@@ -13,6 +13,15 @@ Etapa 1: propuesta de HUs ──► revisión humana (editar o pedir cambios) �
 Etapa 2: hu_gate.py approve ──► secciones 3–17 derivadas de las HUs aprobadas ┘
 ```
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_cobertura_requisitos`
+- `se_estado_hus`
+- `se_validar_documento`
+- `se_registrar_decision_agente`
+
 ## Entradas
 
 - Obligatorio: corpus (`proposal/_meta/corpus/`) o descripción del caso de uso por el usuario.

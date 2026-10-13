@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Servidor MCP (stdio) del kit SE: expone las herramientas de se_tools.py a Claude Code y Codex.
 
-Uso: uv run --group se se_mcp.py        (lo lanza el cliente MCP; no se usa a mano)
+Uso: uv run --no-project se_mcp.py      (lo lanza el harness como servidor MCP por stdio)
 
 Implementa el subconjunto de MCP que necesita un servidor de herramientas: initialize,
 tools/list, tools/call y ping, con JSON-RPC 2.0 por stdio (un mensaje por línea). No depende

@@ -13,6 +13,16 @@ description: "Kit SE (Solutions Engineering). Diseño de aplicación implementab
 
 - `references/python.md` · `references/dotnet.md` · `references/frontend.md` · `references/api-contratos.md`
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_validar_documento`
+- `se_decisiones`
+- `se_registrar_decision_agente`
+- `se_preferencias`
+- `se_diagrama_azure`
+
 ## Workflow
 
 0. Decisiones y preferencias: lee `proposal/_meta/decisiones.md` y `uv run --group se .claude/skills/se-core/scripts/preferencias.py listar`. Cada ADR corresponde a una decisión registrada con `decisiones.py registrar --area tecnologia|arquitectura --ambito … --valor …` y la cita (`D-NNN`); si se aparta de una preferencia, lo dice y lleva `--preferencia` o `--excepcion-de`.

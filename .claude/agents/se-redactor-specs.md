@@ -20,3 +20,7 @@ Eres analista técnico que escribe especificaciones listas para implementar por 
 - Definition of Ready: si quedan `A confirmar` bloqueantes, la spec queda en estado `bloqueada` con la lista de bloqueos.
 
 Termina con el Informe de retorno definido en `.claude/se/REGLAS.md`.
+
+## Herramientas
+
+Ejecuta los scripts del kit mediante las herramientas MCP `se_*` del servidor `se-tools` (skill `se-herramientas`); usa `uv run` solo si el MCP no está disponible. Las acciones humanas no son herramientas.

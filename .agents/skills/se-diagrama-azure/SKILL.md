@@ -12,6 +12,12 @@ Adaptación al kit de la skill `drawio-azure-reference`. Conserva sus reglas de 
 - §12 «Diagrama de arquitectura objetivo preferida» del documento técnico cuando la solución es Azure y conviene un `.drawio` editable además del Mermaid.
 - Diagramas de despliegue o de red para la §20 o para `APP-Diseno`.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_diagrama_azure`
+
 ## Workflow
 
 1. Parte de la evidencia: componentes de §6/§14, flujos de §16, red de §20 y decisiones tecnológicas aceptadas (`proposal/_meta/decisiones.md`). No dibujes servicios que no estén en el documento técnico.

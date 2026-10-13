@@ -4,7 +4,8 @@
 Uso: uv run init_workspace.py [raíz] [--no-deps] [--embeddings] [--no-uv]
 
 1. Carpetas: RFP/, data-samples/, templates/, proposal/ (+ _meta, checklists, specs) y
-   proposal/_meta/se-pipeline-state.md.
+   proposal/_meta/se-pipeline-state.md. Si el kit está instalado de forma global y el
+   repositorio no tiene se.config.json ni se.preferencias.json, copia los del kit.
 2. Entorno Python con uv (salvo --no-uv):
    - sin pyproject.toml → `uv init --bare --no-workspace` (solo crea pyproject.toml)
    - sin .venv → `uv venv` (`uv run` usa siempre el entorno del proyecto, aunque haya otro activado)
@@ -150,6 +151,11 @@ def main() -> int:
     root = resolve_root(a.root)
     root.mkdir(parents=True, exist_ok=True)
     created = layout(root)
+    defaults = Path(__file__).resolve().parents[3] / "se" / "defaults"   # instalación global del kit
+    for name in ("se.config.json", "se.preferencias.json"):
+        if defaults.joinpath(name).exists() and not any((d / name).exists() for d in [root, *root.parents]):
+            shutil.copy2(defaults / name, root / name)
+            created.append(name)
     print(f"workspace: {root}")
     print("carpetas creadas: " + (", ".join(created) if created else "ninguna (ya existían)"))
     return 0 if a.no_uv else setup_uv(root, py_config(root), not a.no_deps, a.embeddings)

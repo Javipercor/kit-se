@@ -7,6 +7,19 @@ description: "Kit SE (Solutions Engineering). Políticas y utilidades comunes de
 
 Base común del resto de skills. No produce entregables de cliente por sí misma.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_init_workspace`
+- `se_inventario_corpus`
+- `se_validar_documento`
+- `se_trazabilidad`
+- `se_cobertura_requisitos`
+- `se_decisiones`
+- `se_registrar_decision_agente`
+- `se_preferencias`
+
 ## Cuándo leer cada referencia
 
 - `references/politica-evidencia.md`: siempre antes de redactar o revisar. Estados, precedencia de fuentes, cómo citar y cómo tratar huecos.

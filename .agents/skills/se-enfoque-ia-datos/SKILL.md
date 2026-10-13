@@ -19,6 +19,15 @@ La **sección 29 «Enfoque De IA Y Ciencia De Datos»** de `proposal/HU-Enfoque-
 - `references/genai-agentes.md`: LLM, RAG, agentes, tools, guardrails.
 - `references/evaluacion.md`: métricas, datasets de evaluación, gates de promoción, monitorización.
 
+## Herramientas MCP
+
+Ejecuta los pasos deterministas de esta skill con las herramientas del servidor MCP `se-tools` (cómo usarlas, argumentos y qué hacer si no está conectado: skill `se-herramientas`). Los comandos `uv run` que aparecen más abajo son la alternativa equivalente.
+
+- `se_validar_documento`
+- `se_registrar_decision_agente`
+- `se_preferencias`
+- `se_decisiones`
+
 ## Workflow
 
 1. Lee funcional, datos (`DATA-Analisis-Fuentes-*`), matriz, preguntas, decisiones vigentes (`proposal/_meta/decisiones.md`) y preferencias (`preferencias.py listar`, ámbitos `llm`, `embeddings`, `orquestacion-agentes`, `ml`, `mlops`).

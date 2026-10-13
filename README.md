@@ -64,7 +64,7 @@ El kit no instala nada en tu Python global ni llama a `python`: los agentes ejec
 
 Si el repositorio ya tiene `pyproject.toml` y `.venv`, no se tocan: solo se añade el grupo `se` si falta. `uv run` usa siempre el entorno del proyecto (`.venv`), aunque tengas otro activado. Las dependencias del grupo se pueden cambiar en `se.config.json` → `python`.
 
-### Instalar para tu herramienta
+### Instalar en un repositorio
 
 Desde la carpeta del kit, indicando el repositorio donde vas a trabajar la propuesta:
 
@@ -73,19 +73,45 @@ make opencode DEST=~/repos/propuesta-x     # OpenCode
 make claude   DEST=~/repos/propuesta-x     # Claude Code
 make codex    DEST=~/repos/propuesta-x     # Codex
 make all      DEST=~/repos/propuesta-x     # las tres
-make uninstall DEST=~/repos/propuesta-x    # quita el kit SE (conserva se.config.json y el workspace)
-make test                                  # smoke test, incluida la convivencia con otro kit
+make uninstall DEST=~/repos/propuesta-x    # quita el kit SE (conserva configuración y workspace)
+make test                                  # smoke test: convivencia, MCP, instalación global…
 ```
 
 Sin `make` (p. ej. Windows): `uv run scripts/install.py --tool claude <destino>` y `uv run scripts/install.py --uninstall <destino>`. Sin `DEST`, `make opencode|claude|codex|all` solo regenera las variantes dentro del propio kit.
 
-| Objetivo | Instala en el destino (solo elementos `se-*`) |
-| --- | --- |
-| `opencode` | `.opencode/agents/se-*.md`, `.opencode/commands/se-*.md`, `.agents/skills/se-*/`, `.agents/se/REGLAS.md`, bloque en `AGENTS.md`, `se.config.json` |
-| `claude` | `.claude/agents/se-*.md`, `.claude/commands/se-*.md`, `.claude/skills/se-*/`, `.claude/se/REGLAS.md`, `.claude/se-lider-proyecto.md`, bloque en `CLAUDE.md`, `se.config.json` |
-| `codex` | `.codex/agents/se-*.toml`, `.codex/se-lider-proyecto.md`, `.agents/skills/se-*/`, `.agents/se/REGLAS.md`, bloque en `AGENTS.md`, `se.config.json` |
+Los tres harness reciben lo mismo: **agentes y comandos** (el método), **skills** (qué hacer en cada fase y cómo usar las herramientas) y el **servidor MCP `se-tools`** (las herramientas deterministas).
 
-Las tres instalan también `se.preferencias.json` si no existe (nunca lo sobrescriben). Además, `opencode` instala el plugin `.opencode/plugins/se-tools.js`, `claude` registra el servidor `se-tools` en `.mcp.json` (fusionando con los servidores que ya tengas) y `codex` añade un bloque delimitado `# se-kit:inicio … # se-kit:fin` en `.codex/config.toml`. Desinstalar quita solo esas entradas.
+| Objetivo | Instala en el repositorio (solo elementos `se-*`) |
+| --- | --- |
+| `opencode` | `.opencode/agents/se-*.md`, `.opencode/commands/se-*.md`, `.agents/skills/se-*/`, `.agents/se/` (reglas y servidor), MCP en `.opencode/opencode.json`, bloque en `AGENTS.md` |
+| `claude` | `.claude/agents/se-*.md`, `.claude/commands/se-*.md`, `.claude/skills/se-*/`, `.claude/se/`, `.claude/se-lider-proyecto.md`, MCP en `.mcp.json`, bloque en `CLAUDE.md` |
+| `codex` | `.codex/agents/se-*.toml`, `.codex/se-lider-proyecto.md`, `.agents/skills/se-*/`, `.agents/se/`, MCP en un bloque de `.codex/config.toml`, bloque en `AGENTS.md` |
+
+Las tres instalan también `se.config.json` (fusionando claves nuevas) y `se.preferencias.json` (solo si no existe). Los ficheros de configuración MCP se fusionan con lo que ya tengas y desinstalar quita solo la entrada `se-tools`. Con `PLUGIN=1` (o `--opencode-plugin`) se instala además el plugin nativo `.opencode/plugins/se-tools.js`, una alternativa al MCP en OpenCode 2 que normalmente no hace falta.
+
+### Instalar de forma global (para todos tus repositorios)
+
+```bash
+make global                  # OpenCode, Claude Code y Codex en tu carpeta personal
+make global TOOL=claude      # solo uno
+make global-uninstall        # quitarlo
+# sin make: uv run scripts/install.py --tool all --global   ·   --uninstall --global
+```
+
+| Harness | Dónde queda |
+| --- | --- |
+| OpenCode | `~/.config/opencode/{agents,commands}/se-*`, `~/.agents/skills/se-*/`, `~/.agents/se/`, MCP en `~/.config/opencode/opencode.json`, bloque en `~/.config/opencode/AGENTS.md` |
+| Claude Code | `~/.claude/{agents,commands,skills}/se-*`, `~/.claude/se/`, `~/.claude/se-lider-proyecto.md`, MCP de ámbito usuario (`claude mcp add-json --scope user` si está la CLI; si no, en `~/.claude.json`), bloque en `~/.claude/CLAUDE.md` |
+| Codex | `~/.codex/agents/se-*.toml`, `~/.codex/se-lider-proyecto.md`, `~/.agents/skills/se-*/`, `~/.agents/se/`, MCP en `~/.codex/config.toml`, bloque en `~/.codex/AGENTS.md` |
+
+Diferencias con la instalación por repositorio:
+
+- Las rutas de las instrucciones (`.agents/skills/…`, `.agents/se/…`) se reescriben a rutas absolutas de tu carpeta personal.
+- La configuración por defecto (`se.config.json`, `se.preferencias.json`) queda en `~/.agents/se/defaults/` (y `~/.claude/se/defaults/`); `/se-init` la copia a cada repositorio que no la tenga, y a partir de ahí se ajusta por propuesta.
+- Si un repositorio tiene además una instalación local del kit, la local manda (agentes, skills y MCP del proyecto tienen precedencia en los tres harness).
+- Para actualizar, vuelve a ejecutar `make global` desde la nueva versión del kit.
+
+Probado con OpenCode 2.0.27: tras `make global`, en un repositorio vacío aparecen los 10 agentes, los 14 comandos, las 11 skills y el MCP `se-tools` conectado.
 
 ### Cómo convive con otros kits
 
@@ -94,7 +120,8 @@ Las tres instalan también `se.preferencias.json` si no existe (nunca lo sobresc
 | Agentes, comandos, skills | Solo crea, reemplaza o borra entradas con prefijo `se-`; las de otros kits en las mismas carpetas no se tocan |
 | `AGENTS.md` / `CLAUDE.md` | Añade (o actualiza) un único bloque entre `<!-- se-kit:inicio -->` y `<!-- se-kit:fin -->` que dice: "para trabajo del kit SE, lee `.agents/se/REGLAS.md`". El resto del fichero queda intacto; reinstalar no duplica el bloque y desinstalar lo quita |
 | Reglas del kit | Viven en `.agents/se/REGLAS.md` (`.claude/se/REGLAS.md` en Claude Code) y solo se aplican a trabajo `SE` |
-| Agente por defecto | No se modifica `opencode.json`: `se-lider-proyecto` es primario pero no por defecto; lo activan los comandos `/se-*` o lo eliges con Tab |
+| Agente por defecto | No se cambia el agente por defecto: `se-lider-proyecto` es primario pero lo activan los comandos `/se-*` o lo eliges con Tab |
+| Configuración MCP | Solo se añade (o quita) la entrada `se-tools` en `.opencode/opencode.json`, `.mcp.json` y `.codex/config.toml`; el resto de servidores y opciones se conservan |
 | Activación de skills | Las descripciones de agentes y skills empiezan por "Kit SE" y limitan su uso a comandos `/se-*`, agentes `se-*` o petición expresa, para que no se disparen con artefactos de otros kits |
 | `se.config.json` | Si ya existe, se conservan tus valores y solo se añaden claves nuevas (`FORCE=1` lo reemplaza) |
 | `se.preferencias.json` | Se copia el catálogo base del kit solo si no existe; nunca se sobrescribe ni se borra |
@@ -175,20 +202,73 @@ El líder ejecuta las fases pendientes delegando en los subagentes y **se detien
 | Subagentes | `@se-…` o delegación del líder | Delegación del líder o "usa el subagente se-…" | `.codex/agents/se-*.toml`, pidiéndolo explícitamente |
 | Skills | `.agents/skills/se-*/` | `.claude/skills/se-*/` (copia generada) | `.agents/skills/se-*/`, invocables con `$se-…` |
 | Reglas | `.agents/se/REGLAS.md` (vía bloque en `AGENTS.md`) | `.claude/se/REGLAS.md` (vía bloque en `CLAUDE.md`) | `.agents/se/REGLAS.md` (vía bloque en `AGENTS.md`) |
-| Herramientas `se_*` | Plugin `.opencode/plugins/se-tools.js` | Servidor MCP `se-tools` en `.mcp.json` | Servidor MCP `se-tools` en `.codex/config.toml` |
+| Herramientas `se_*` | MCP `se-tools` en `.opencode/opencode.json` | MCP `se-tools` en `.mcp.json` | MCP `se-tools` en `.codex/config.toml` |
+| Cómo usar las herramientas | Skill `se-herramientas` + sección «Herramientas MCP» de cada skill | Ídem | Ídem |
 | Rutas de scripts | `.agents/skills/se-…/scripts/` | `.claude/skills/se-…/scripts/` | `.agents/skills/se-…/scripts/` |
 
-### Herramientas del kit (plugin y MCP)
+### Herramientas del kit: servidor MCP `se-tools`
 
-Los scripts deterministas del kit se exponen como 18 herramientas tipadas `se_*` (barrido y cobertura de requisitos, validadores, decisiones, exportación del backlog, diagramas…). Hay un único registro, `.agents/se/tools/se_tools.py`, y dos envoltorios:
+Los scripts deterministas del kit se exponen como 18 herramientas tipadas `se_*` (barrido y cobertura de requisitos, validadores, decisiones, exportación del backlog, diagramas…) mediante **un único servidor MCP, igual en los tres harness**. Las skills enseñan a usarlas: cada skill de fase lista las herramientas que le corresponden y la skill `se-herramientas` explica el catálogo, los argumentos, cómo leer el resultado y qué hacer si el MCP no está conectado.
 
-- **OpenCode → plugin** `.opencode/plugins/se-tools.js` (API de plugins V2). Lo descubre solo; no necesita `package.json` ni dependencias. En OpenCode 2 las herramientas de plugin aparecen dentro de *Code Mode* (la herramienta `execute`): el modelo las invoca como `tools.se_exportar_backlog({...})`. Probado de punta a punta con OpenCode 2.0.27.
-- **Claude Code → servidor MCP** `se-tools` registrado en `.mcp.json` (`uv run --group se .claude/se/tools/se_mcp.py`). Claude Code pide confirmar el servidor la primera vez. El servidor no depende del paquete `mcp`; está probado con el cliente oficial del SDK.
-- **Codex → el mismo servidor MCP**, en un bloque delimitado de `.codex/config.toml` (Codex solo lee la configuración del proyecto si el proyecto es de confianza; si no, copia el bloque a `~/.codex/config.toml`).
+Las acciones humanas (aprobar HUs, aceptar o rechazar decisiones, registrar decisiones humanas, fijar preferencias) no son herramientas a propósito: ningún agente puede ejecutarlas por esa vía.
 
-Las acciones humanas (aprobar HUs, aceptar o rechazar decisiones, registrar decisiones humanas, fijar preferencias) no son herramientas a propósito: así ningún agente puede ejecutarlas por esa vía. Siguen disponibles como scripts, con confirmación obligatoria en OpenCode.
+#### Cómo se "levanta" el MCP
 
-Si no ves las herramientas: comprueba que `/se-init` se ejecutó con dependencias (el servidor MCP usa el grupo `se`), que `uv` está en el `PATH` del proceso de OpenCode o Claude Code y, en OpenCode, `opencode api GET /api/plugin` (debe aparecer `se-kit.tools` activo).
+No hay que arrancar nada a mano ni dejar un proceso en marcha: `se-tools` es un servidor **stdio** que el propio harness lanza al abrir la sesión (y cierra al salir), con este comando:
+
+```bash
+uv run --no-project .agents/se/tools/se_mcp.py        # .claude/se/tools/se_mcp.py en Claude Code
+```
+
+`--no-project` hace que arranque solo con la biblioteca estándar, aunque el repositorio no esté inicializado. Cada herramienta ejecuta después su script con el entorno del repositorio (grupo `se` que crea `/se-init`). Lo único que necesitas es `uv` en el `PATH` y haber ejecutado `/se-init` en el repositorio.
+
+El instalador ya registra el servidor. Para comprobarlo:
+
+| Harness | Comprobar | Qué deberías ver |
+| --- | --- | --- |
+| Cualquiera | `make mcp-test` (desde la carpeta del kit) | `OK se-tools 1.0.0 · 18 herramientas` |
+| OpenCode | `opencode mcp list` | `✓ se-tools connected` |
+| Claude Code | `/mcp` dentro de Claude, o `claude mcp list` | `se-tools` conectado. La primera vez Claude pide aprobar los servidores de `.mcp.json` del proyecto |
+| Codex | `codex mcp list` | `se-tools` |
+
+#### Registrarlo a mano (sin el instalador, o si tu configuración tiene comentarios)
+
+El instalador no reescribe ficheros JSON con comentarios (`opencode.jsonc`); en ese caso, o si prefieres hacerlo tú:
+
+```bash
+# Claude Code (proyecto: queda en .mcp.json; usa --scope user para todos tus repositorios)
+claude mcp add --scope project se-tools -- uv run --no-project .claude/se/tools/se_mcp.py
+
+# Codex
+codex mcp add se-tools -- uv run --no-project .agents/se/tools/se_mcp.py
+```
+
+```jsonc
+// OpenCode: .opencode/opencode.json (o opencode.json en la raíz, o ~/.config/opencode/opencode.json)
+{
+  "mcp": {
+    "se-tools": { "type": "local", "command": ["uv", "run", "--no-project", ".agents/se/tools/se_mcp.py"], "enabled": true }
+  }
+}
+```
+
+```toml
+# Codex: .codex/config.toml (proyecto de confianza) o ~/.codex/config.toml
+[mcp_servers.se-tools]
+command = "uv"
+args = ["run", "--no-project", ".agents/se/tools/se_mcp.py"]
+```
+
+En instalaciones globales usa la ruta absoluta del servidor (`~/.agents/se/tools/se_mcp.py` o `~/.claude/se/tools/se_mcp.py`): el harness lo lanza desde el repositorio en el que trabajas y ese es el workspace de las herramientas.
+
+#### Sin MCP
+
+Si el MCP no conecta, las herramientas funcionan igual desde la línea de comandos (también útil en CI):
+
+```bash
+uv run --no-project .agents/se/tools/se_tools.py list
+uv run --no-project .agents/se/tools/se_tools.py call se_validar_backlog '{"final": true}'
+```
 
 ### 3.1 OpenCode
 
@@ -599,6 +679,7 @@ Todos siguen la política de evidencia de `.agents/se/REGLAS.md`: no inventan si
 | `se-diseno-aplicacion` | técnico | `ADR-NN`, módulos, operaciones API | `references/{python,dotnet,frontend,api-contratos}.md` |
 | `se-spec-feature` | HUs, técnico, aplicación | `F-NNN`, `AC-FNNN-NN` | `assets/{index,spec}.md` |
 | `se-backlog-hu` | funcional + técnico (+ specs) | `6.0-backlog.md`, `exports/` (CSV de Azure DevOps, Excel de horas) | `references/{contrato-backlog,catalogo-tareas}.md`, `scripts/exporters/` |
+| `se-herramientas` | — | Uso de las herramientas MCP `se_*`: catálogo, argumentos, resultados, alternativa sin MCP | — |
 | `se-diagrama-azure` | técnico (§6, §14, §16, §20) | `diagramas/*.drawio` | `references/especificacion.md`, `assets/{icons,ejemplo.json}` |
 
 ```mermaid
@@ -647,10 +728,10 @@ Se ejecutan con `uv run --group se <ruta>` (salvo `init_workspace.py`, con `uv r
 | `se-backlog-hu/scripts/effort_summary.py` | `<6.0-backlog.md> [--write] [--csv]` | Resumen de esfuerzo o CSV `epic;hu;rol;horas` |
 | `se-backlog-hu/scripts/export_backlog.py` | `[--formato todos\|json\|ado\|xlsx] [--backlog RUTA] [--salida DIR]` | Backlog → CSV de Azure DevOps, Excel de horas y JSON intermedios, sin LLM |
 | `se-diagrama-azure/scripts/drawio_azure.py` | `<spec.json> [--salida RUTA] [--validar]` · `--iconos` | Diagrama draw.io de arquitectura Azure desde una especificación |
-| `.agents/se/tools/se_tools.py` | `list` · `call <herramienta> '<json>'` | Registro de las herramientas `se_*` (lo usan el plugin y el MCP) |
+| `.agents/se/tools/se_tools.py` | `list` · `call <herramienta> '<json>'` | Registro de las herramientas `se_*` (lo usan el MCP, el plugin opcional y la línea de comandos) |
 | `.agents/se/tools/se_mcp.py` | (lo lanza el cliente MCP) | Servidor MCP por stdio de las herramientas `se_*` |
 | `scripts/sync_agents.py` | `[--target claude\|codex\|all] [--check]` | Genera `.claude/` y `.codex/` desde las fuentes |
-| `scripts/install.py` | `--tool opencode\|claude\|codex\|all [destino] [--force]` | Instalación por herramienta |
+| `scripts/install.py` | `--tool opencode\|claude\|codex\|all [destino\|--global] [--force] [--opencode-plugin]` · `--uninstall [--global]` | Instalación por repositorio o global, con registro del MCP |
 | `scripts/smoke_test.py` | — | Instala en temporal y ejecuta todos los scripts |
 
 Ficheros que generan en `proposal/_meta/`: `corpus-manifest.json`, `corpus/` (texto, páginas, tablas), `req-scan/` (plan, unidades, hallazgos, grupos, embeddings, calibración), `registro-requisitos.json`, `decisiones/eventos.jsonl`, `decisiones.md`, `cobertura-<slug>.md`, `hu-aprobadas-<slug>.json`, `data-profiles/`, `revision-*.md`, `se-pipeline-state.md`. Fuera de `_meta/`: `proposal/exports/` (backlog exportado) y `proposal/diagramas/` (draw.io y sus especificaciones).
@@ -722,8 +803,10 @@ Formatos usados (OpenCode, Claude Code y Codex evolucionan rápido; si tu versi�
 | El gate no avanza por decisiones pendientes | `/se-decisiones` para verlas y aceptarlas o rechazarlas |
 | "elige X, pero PREF-NN obliga a Y" | Cambia la elección o registra una excepción (`--tipo excepcion --excepcion-de PREF-NN`) y acéptala |
 | `preferencias.py validar`: "sin decisión humana que la respalde" | La preferencia se editó a mano; vuelve a fijarla con `/se-preferencias` o márcala `"origen": "organizacion"` si es del catálogo base |
-| OpenCode no ofrece las herramientas `se_*` | En OpenCode 2 viven en Code Mode (`execute`), no como herramientas sueltas. Si tampoco aparecen ahí: `opencode api GET /api/plugin` y revisa que `se-kit.tools` esté activo y que `uv` esté en el PATH del servicio |
-| Claude Code no conecta con `se-tools` | Acepta el servidor del proyecto (`/mcp`), ejecuta `/se-init` (crea el grupo `se`) y comprueba `uv run --group se .claude/se/tools/se_mcp.py` a mano |
+| OpenCode no ofrece las herramientas `se_*` | `opencode mcp list` debe mostrar `se-tools` conectado. Si no: `uv` fuera del PATH del servicio, o la entrada `mcp` no está en `.opencode/opencode.json`. Con el plugin opcional, en OpenCode 2 viven dentro de Code Mode (`execute`) |
+| Claude Code no conecta con `se-tools` | Aprueba los servidores del proyecto en `/mcp`; comprueba `make mcp-test` y que `uv` esté en el PATH. En instalación global: `claude mcp list` debe mostrarlo en ámbito usuario |
+| Codex no ve `se-tools` | Codex solo lee `.codex/config.toml` en proyectos de confianza: márcalo como tal o usa la instalación global (`~/.codex/config.toml`) |
+| El instalador avisa de que no pudo leer un `opencode.json` | Tiene comentarios (JSONC): añade la entrada `mcp` a mano (ver «Registrarlo a mano») |
 | `se_exportar_backlog`: "mapeos no válidos" | Un rol del backlog se traduce a un valor que el CSV o el Excel no admiten: ajusta `se.config.json` → `exportacion` |
 | Claude Code no ve un cambio en una skill | Editaste `.claude/skills/`; edita `.agents/skills/` y ejecuta `make sync` |
 | `make check` falla en CI | Alguien editó fuentes sin regenerar: `make sync` y commit |

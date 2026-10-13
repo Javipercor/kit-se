@@ -2,8 +2,8 @@
 """Herramientas del kit SE: registro único para el plugin de OpenCode y el servidor MCP.
 
 Uso:
-  uv run --group se se_tools.py list                      # definiciones (JSON) de todas las herramientas
-  uv run --group se se_tools.py call <nombre> '<json>'    # ejecuta una herramienta y devuelve JSON
+  uv run --no-project se_tools.py list                      # definiciones (JSON) de todas las herramientas
+  uv run --no-project se_tools.py call <nombre> '<json>'  # ejecuta una herramienta y devuelve JSON
                                                           # {"ok": bool, "exit_code": int, "output": str}
 Opciones de call: --root DIR (raíz del workspace; por defecto, el directorio actual o SE_WORKSPACE).
 
@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -177,6 +179,21 @@ TOOLS = [
 BY_NAME = {t.name: t for t in TOOLS}
 
 
+def python_for(workspace: Path) -> list[str]:
+    """Intérprete para los scripts: el entorno del workspace (grupo uv 'se') si existe; si no, el actual.
+
+    El servidor MCP se lanza con `uv run --no-project` (solo biblioteca estándar), así arranca aunque
+    el workspace no esté inicializado; las dependencias de cada script las aporta el grupo 'se'.
+    SE_PYTHON fuerza un intérprete concreto.
+    """
+    if os.environ.get("SE_PYTHON"):
+        return [os.environ["SE_PYTHON"]]
+    py = workspace / "pyproject.toml"
+    if shutil.which("uv") and py.exists() and re.search(r"^\s*se\s*=", py.read_text(encoding="utf-8"), re.M):
+        return ["uv", "run", "--quiet", "--group", "se", "python"]
+    return [sys.executable]
+
+
 def definitions() -> list[dict]:
     return [{"name": t.name, "description": t.description, "inputSchema": t.schema()} for t in TOOLS]
 
@@ -204,7 +221,7 @@ def call(name: str, args: dict, root: str | None = None) -> dict:
     if err:
         return {"ok": False, "exit_code": 2, "output": err}
     cwd = Path(root or os.environ.get("SE_WORKSPACE") or Path.cwd())
-    cmd = [sys.executable, *tool.build(args)]
+    cmd = [*python_for(cwd), *tool.build(args)]
     try:
         r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=TIMEOUT)
     except subprocess.TimeoutExpired:
